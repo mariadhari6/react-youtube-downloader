@@ -9,7 +9,7 @@ const Videos: React.FC = () => {
           <img
             src={itemContentContext?.state?.thumbnail}
             alt="thmbnail"
-            className="rounded-lg w-max h-max"
+            className="rounded-lg sm:w-max sm:h-max"
           />
           <div>
             <h4 className="font-bold text-2xl capitalize">
