@@ -3,10 +3,11 @@ import { API_CONFIG, ENDPOINT } from "../config";
 import { ItemContentContext } from "../contexts/ItemContent";
 import { Video, Audio, ItemContent } from "../interface";
 
-const SearchBar: React.FC = () => {
+const SearchBar = (props: any) => {
   const [search, setSearch] = React.useState<string>();
   const itemContentContext: any = useContext(ItemContentContext);
   const fetchApi = (id: string | undefined): void => {
+    props?.setLoading(true);
     const endPoint = ENDPOINT + id;
     const params: RequestInit = {
       headers: API_CONFIG,
@@ -48,9 +49,11 @@ const SearchBar: React.FC = () => {
           itemContentContext.setState(itemContent);
           setSearch("");
         } else throw new Error("Failed");
+        props?.setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        props?.setLoading(false);
       });
   };
   const handleSubmit = (e: any): void => {
@@ -61,6 +64,7 @@ const SearchBar: React.FC = () => {
     );
     if (idVideo !== null) {
       fetchApi(idVideo);
+      itemContentContext.setState((prevState: any) => null);
     }
   };
   return (
