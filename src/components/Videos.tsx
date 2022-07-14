@@ -1,7 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ItemContentContext } from "../contexts/ItemContent";
+import { Video, Audio } from "../interface";
 const Videos: React.FC = () => {
   const itemContentContext: any = useContext(ItemContentContext);
+  const [type, setType] = useState<String>("");
+  const [items, setItems] = useState<Video[] | Audio[]>();
+  const [target, setTarget] = useState<string>();
+  useEffect(() => {
+    if (type === "audio") {
+      setItems(itemContentContext.state.audios);
+    } else {
+      setItems(itemContentContext.state.videos);
+    }
+  }, [type]);
   return (
     <React.Fragment>
       <div className="block lg:flex justify-between md:w-4/5 w-5/6 mt-3">
@@ -15,7 +26,6 @@ const Videos: React.FC = () => {
             <h4 className="font-bold text-2xl capitalize">
               {itemContentContext?.state?.title}
             </h4>
-
             {itemContentContext?.state?.description
               ?.split("\n")
               .map((phrase: any, index: number) => {
@@ -36,23 +46,40 @@ const Videos: React.FC = () => {
           </div>
         </div>
         <div className="grid grid-flow-col gap-1 h-fit mt-5 lg:mt-0">
-          <select className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium cursor-pointer col-span-4">
+          <select
+            onChange={(e) => setType(e.target.value)}
+            className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium cursor-pointer col-span-4"
+          >
             <option value="" className="text-white" disabled selected>
               Media
             </option>
             <option value="video">Video</option>
             <option value="audio">Audio</option>
           </select>
-          <select className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium cursor-pointer col-span-4">
+          <select
+            className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium cursor-pointer col-span-4"
+            onChange={(e) => setTarget(e.target.value)}
+          >
             <option value="" className="text-white" disabled selected>
               Quality
             </option>
-            <option value="360p">360</option>
-            <option value="720p">720</option>
+            {items?.map((item: any, index: any) =>
+              type === "video" ? (
+                <option value={item.url}>
+                  {item.quality} | {item.extension}
+                </option>
+              ) : (
+                <option value={item.url}>{item.extension}</option>
+              )
+            )}
           </select>
-          <button className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium hover:bg-indigo-500 hover:text-white col-span-4">
+          <a
+            href={target}
+            target="_blank"
+            className="outline-none bg-transparent border-2 border-indigo-500 py-1 px-3 text-indigo-500 rounded font-medium hover:bg-indigo-500 hover:text-white col-span-4"
+          >
             Download
-          </button>
+          </a>
         </div>
       </div>
     </React.Fragment>
