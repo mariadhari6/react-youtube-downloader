@@ -58,10 +58,16 @@ const SearchBar = (props: any) => {
   };
   const handleSubmit = (e: any): void => {
     e.preventDefault();
-    const idVideo = search?.substring(
+    let idVideo = search?.substring(
       search.indexOf("=") + 1,
       search.lastIndexOf("&")
     );
+    if (!idVideo || idVideo === "") {
+      idVideo = search?.substring(
+        search.indexOf("be/") + 3,
+        search.lastIndexOf(search.charAt(search.length))
+      );
+    }
     if (idVideo !== null) {
       fetchApi(idVideo);
       itemContentContext.setState((prevState: any) => null);
