@@ -58,15 +58,25 @@ const SearchBar = (props: any) => {
   };
   const handleSubmit = (e: any): void => {
     e.preventDefault();
-    let idVideo = search?.substring(
-      search.indexOf("=") + 1,
-      search.lastIndexOf("&")
-    );
-    if (!idVideo || idVideo === "") {
-      idVideo = search?.substring(
-        search.indexOf("be/") + 3,
-        search.lastIndexOf(search.charAt(search.length))
-      );
+    let first = search?.indexOf("v=");
+    let last = search?.lastIndexOf("&");
+    // for youtube watch
+    let idVideo = search?.substring(Number(first) + 2, Number(last));
+
+    if (first === -1 || last === -1) {
+      first = search?.indexOf("be/");
+      last = search?.lastIndexOf(search.charAt(search.length));
+      // for youtube .be on app
+      idVideo = search?.substring(Number(first) + 3, last);
+    }
+    if (first === -1 || last === -1) {
+      first = search?.indexOf("shorts/");
+      last = search?.lastIndexOf("?");
+      if (last === -1) {
+        last = search?.lastIndexOf(search.charAt(search.length));
+      }
+      // for youtube short
+      idVideo = search?.substring(Number(first) + 7, last);
     }
     if (idVideo !== null) {
       fetchApi(idVideo);
